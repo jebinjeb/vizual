@@ -9,11 +9,12 @@
     "build:tailwind": "tailwind build styles/globals.css -o styles/tailwind.css"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "5.15.4",
     "@popperjs/core": "2.11.0",
     "@tailwindcss/forms": "0.4.0",
     "next": "12.0.7",
     "react": "17.0.2",
+    "react-d3-components": "^0.9.1",
     "react-dom": "17.0.2",
     "react-scripts": "5.0.0",
     "tailwindcss": "3.0.7"

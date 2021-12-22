@@ -1,7 +1,8 @@
 import Navbar from "../../../components/navbar";
-import Panel from "../../../components/panel";
+import Panel from "../../../components/panel-container";
 
 export default function Dashboard() {
+
   return (
     <div className='min-h-screen bg-blueGray-100'>
       <Navbar></Navbar>
@@ -35,20 +36,20 @@ export default function Dashboard() {
       <div className="mx-auto">
         <div className="px-4 mx-auto">
           <div className="flex flex-wrap">
-            <div className="w-full px-4 flex-1">
-              <Panel></Panel>
+            <div className="w-full h-auto px-4 flex-1">
+              <Panel type="Table"></Panel>
             </div>
-            <div className="w-full px-4 flex-1">
-              <Panel></Panel>
+            <div className="w-full h-auto px-4 flex-1">
+              <Panel type="BarChart"></Panel>
             </div>
-            <div className="w-full px-4 flex-1">
-              <Panel></Panel>
+            <div className="w-full h-auto px-4 flex-1">
+              <Panel type="AreaChart"></Panel>
             </div>
-            <div className="w-full px-4 flex-1">
-              <Panel></Panel>
+            <div className="w-full h-auto px-4 flex-1">
+              <Panel type="Table"></Panel>
             </div>
-            <div className="w-full px-4 flex-1">
-              <Panel></Panel>
+            <div className="w-full h-auto px-4 flex-1">
+              <Panel type="Table"></Panel>
             </div>
           </div>
         </div>

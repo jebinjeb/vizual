@@ -40,11 +40,26 @@ export default function Navbar() {
     }
   };
 
+  const toggleNavbar = () => {
+    console.log('toggle');
+  };
+
   return (
     <div className="mx-auto bg-white shadow-lg mb-5">
       <div className="flex flex-wrap h-16">
+        {/* Menu button */}
+        <div className="w-full flex flex-1 justify-start items-center px-10 lg:hidden">
+          <button
+            className="font-semibold text-blueGray-600 uppercase text-md px-4 py-3 rounded hover:text-amber-500 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            type="button"
+            onClick={() => toggleNavbar()}
+          >
+            <i className="fas fa-bars"></i>
+          </button>
+        </div>
+
         {/* Actions */}
-        <div className="w-full flex flex-1 justify-start items-center px-10">
+        <div className="w-full flex flex-1 justify-start items-center px-10 lg:flex md:hidden sm:hidden">
           <div className="relative inline-flex align-middle">
             <button
               className="font-semibold text-blueGray-600 uppercase text-md px-4 py-3 rounded hover:text-amber-500 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
