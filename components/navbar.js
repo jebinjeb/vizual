@@ -1,5 +1,6 @@
 import { createPopper } from "@popperjs/core";
 import Image from "next/image";
+import Link from "next/link";
 import { createRef, useState } from "react";
 
 export default function Navbar() {
@@ -81,31 +82,33 @@ export default function Navbar() {
                 "bg-blueGray-700 text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-40 min-w-48"
               }
             >
-              <a
-                href="#pablo"
-                className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold"
-                onClick={e => e.preventDefault()}
-              >Clickhouse</a>
+              <Link href="/dashboard/view/verizon">
+                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold">Verizon</a>
+              </Link>
+
+              <Link href="/dashboard/view/alcatel">
+                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold">Alcatel</a>
+              </Link>
+
+              <div className="h-0 my-2 border border-solid border-t-0 border-blueGray-800 opacity-25" />
 
               <a
                 href="#pablo"
-                className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold"
+                className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white"
                 onClick={e => e.preventDefault()}
-              >Postgres</a>
+              >
+                CREATE
+              </a>
             </div>
           </div>
 
-          <button
-            className="font-semibold text-blueGray-600 uppercase text-md px-6 py-3 rounded hover:text-amber-500 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-            type="button">
-            Queries
-          </button>
-
-          <button
-            className="font-semibold text-blueGray-600 uppercase text-md px-6 py-3 rounded hover:text-amber-500 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-            type="button">
-            Alerts
-          </button>
+          <Link href="/datasource" passHref>
+            <button
+              className="font-semibold text-blueGray-600 uppercase text-md px-6 py-3 rounded hover:text-amber-500 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              type="button">
+              Datasource
+            </button>
+          </Link>
         </div>
 
         {/* Logo */}
