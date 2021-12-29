@@ -33,8 +33,8 @@ export default function AreaChartPanel() {
             let h = chartRef.current._innerHeight;
             let w = chartRef.current._innerWidth;
 
-            if (chartRef.current._innerHeight < 190) {
-                h = 190;
+            if (chartRef.current._innerHeight < 250) {
+                h = 250;
             }
 
             if (chartRef.current._innerWidth < 421) {
@@ -54,8 +54,8 @@ export default function AreaChartPanel() {
     return (<>
         <div id="x" className="rounded-t mb-0 px-4 py-3 border-0">
             <div className="flex flex-wrap items-center">
-                <div className="relative w-full px-2 max-w-full flex-grow flex-1">
-                    <h3 className="font-semibold text-base text-blueGray-700">Social traffic</h3>
+                <div className="relative w-full p-2 max-w-full flex-grow flex-1">
+                    <h3 className="font-semibold text-md text-blueGray-600 uppercase">Social traffic</h3>
                 </div>
                 <div className="relative w-full px-2 max-w-full flex-grow flex-1 text-right">
                     {

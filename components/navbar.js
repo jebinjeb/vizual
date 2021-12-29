@@ -6,6 +6,7 @@ import { createRef, useState } from "react";
 export default function Navbar() {
   const [dashboardsDropdownStatus, setDashboardsDropdownStatus] = useState(false);
   const [profileDropdownStatus, setProfileDropdownStatus] = useState(false);
+  const [navStatus, setNavStatus] = useState(false);
 
   const dashboardsBtnRef = createRef();
   const dashboardsDropdownRef = createRef();
@@ -42,7 +43,7 @@ export default function Navbar() {
   };
 
   const toggleNavbar = () => {
-    console.log('toggle');
+    setNavStatus(!navStatus);
   };
 
   return (
@@ -60,7 +61,7 @@ export default function Navbar() {
         </div>
 
         {/* Actions */}
-        <div className="w-full flex flex-1 justify-start items-center px-10 lg:flex md:hidden sm:hidden">
+        <div className={"w-full flex flex-1 justify-start items-center px-10 lg:flex md:hidden sm:hidden"}>
           <div className="relative inline-flex align-middle">
             <button
               className="font-semibold text-blueGray-600 uppercase text-md px-4 py-3 rounded hover:text-amber-500 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -83,22 +84,18 @@ export default function Navbar() {
               }
             >
               <Link href="/dashboard/view/verizon">
-                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold">Verizon</a>
+                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600">Verizon</a>
               </Link>
 
               <Link href="/dashboard/view/alcatel">
-                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold">Alcatel</a>
+                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600">Alcatel</a>
               </Link>
 
               <div className="h-0 my-2 border border-solid border-t-0 border-blueGray-800 opacity-25" />
 
-              <a
-                href="#pablo"
-                className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white"
-                onClick={e => e.preventDefault()}
-              >
-                CREATE
-              </a>
+              <Link href="/dashboard/create">
+                <a className="text-sm py-2 px-4 font-semibold block w-full whitespace-no-wrap uppercase bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600">Create</a>
+              </Link>
             </div>
           </div>
 
