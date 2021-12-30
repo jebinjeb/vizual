@@ -11,7 +11,7 @@ export default function DataSource() {
 
     const [sources, setSources] = useState(data);
 
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, setValue } = useForm();
 
     const deleteSource = (source) => {
         setSources(sources.filter(s => s.id !== source.id));
@@ -21,6 +21,10 @@ export default function DataSource() {
         source.id = sources.length + 1;
         setSources(sources.concat(source));
         reset({ name: '', host: '' });
+    };
+
+    const editSource = (source) => {
+        setValue('name', source.name);
     };
 
     return (
@@ -56,6 +60,10 @@ export default function DataSource() {
                                                         {source.name}
                                                     </th>
                                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-md whitespace-nowrap text-right">
+                                                        <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none mx-5 hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button" onClick={() => editSource(source)}>
+                                                            <i className="fas fa-pencil-alt"></i>
+                                                        </button>
+
                                                         <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button" onClick={() => deleteSource(source)}>
                                                             <i className="fas fa-times"></i>
                                                         </button>

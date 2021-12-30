@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AreaChart } from 'react-d3-components';
 
-export default function AreaChartPanel() {
-    const isModeEditing = false;
-
+export default function AreaChartPanel({ editmode }) {
     const data = [
         {
             label: 'Fetch',
@@ -59,14 +57,16 @@ export default function AreaChartPanel() {
                 </div>
                 <div className="relative w-full px-2 max-w-full flex-grow flex-1 text-right">
                     {
-                        isModeEditing ?
-                            <button className="text-blueGray-500 bg-blueGray-300 hover:bg-amber-500 hover:text-white active:bg-amber-600 text-md rounded ease-linear transition-all duration-150" type="button">
-                                <i className="px-2 fas fa-times"></i>
-                            </button>
-                            :
-                            <button className="text-blueGray-500 bg-blueGray-300 hover:bg-amber-500 hover:text-white active:bg-amber-600 text-md rounded ease-linear transition-all duration-150" type="button">
-                                <i className="px-2 fas fa-ellipsis-h"></i>
-                            </button>
+                        editmode ?
+                            <>
+                                <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none mx-3 hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button">
+                                    <i className="fas fa-pencil-alt"></i>
+                                </button>
+
+                                <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button">
+                                    <i className="fas fa-times"></i>
+                                </button>
+                            </> : null
                     }
                 </div>
             </div>
