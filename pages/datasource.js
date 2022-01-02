@@ -1,35 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Navbar from "../components/navbar";
 
 export default function DataSource() {
-    const data = [
-        { id: 1, name: 'Clickhouse', host: '', port: '', username: '', password: '' },
-        { id: 2, name: 'Postgres', host: '', port: '', username: '', password: '' },
-        { id: 3, name: 'Mysql', host: '', port: '', username: '', password: '' }
-    ];
-
-    const [sources, setSources] = useState(data);
+    const [sources, setSources] = useState([]);
 
     const { register, handleSubmit, reset, setValue } = useForm();
 
-    const deleteSource = (source) => {
-        setSources(sources.filter(s => s.id !== source.id));
+    useEffect(() => {
+        getSources();
+    }, []);
+
+    const deleteSource = async (source) => {
+        await fetch("/api/postgres", {
+            method: "DELETE",
+            body: JSON.stringify({ "id": source.id }),
+            headers: { "Content-Type": "application/json" }
+        });
+        
+        getSources();
     };
 
-    const createSource = (source) => {
-        source.id = sources.length + 1;
-        setSources(sources.concat(source));
-        reset({ name: '', host: '' });
+    const createSource = async (source) => {
+        const request = {
+            name: source.name,
+            metadata: {
+                host: source.host,
+                port: source.port,
+                user: source.user,
+                password: source.password
+            }
+        };
+
+        await fetch("/api/postgres", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request)
+        });
+
+        reset();
+        getSources();
     };
 
     const editSource = (source) => {
-        setValue('name', source.name);
+        setValue("name", source.name);
+        setValue("host", source.metadata?.host);
+        setValue("port", source.metadata?.port);
+        setValue("user", source.metadata?.user);
+        setValue("password", source.metadata?.password);
+    };
+
+    const getSources = async () => {
+        let res = await fetch("/api/postgres");
+        let sources = await res.json();
+        setSources(sources);
     };
 
     return (
         <>
-            <div className='min-h-screen bg-blueGray-100'>
+            <div className="min-h-screen bg-blueGray-100">
                 <Navbar></Navbar>
 
                 <div className="mx-auto mb-5">
@@ -102,7 +131,7 @@ export default function DataSource() {
 
                                     <div className="relative w-full mb-6">
                                         <label className="block text-blueGray-400 text-sm mb-2">Username</label>
-                                        <input {...register("username")} type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter panel name" />
+                                        <input {...register("user")} type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter panel name" />
                                     </div>
 
                                     <div className="relative w-full mb-10">
@@ -110,8 +139,12 @@ export default function DataSource() {
                                         <input {...register("password")} type="password" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter panel name" />
                                     </div>
 
-                                    <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="submit">
-                                        Create
+                                    <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 mr-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="submit">
+                                        Save
+                                    </button>
+
+                                    <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="button" onClick={() => reset()}>
+                                        Reset
                                     </button>
                                 </form>
                             </div>
