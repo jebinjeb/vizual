@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import Navbar from "../components/navbar";
 
 export default function DataSource() {
+    const [editMode, setEditMode] = useState(false);
     const [sources, setSources] = useState([]);
 
     const { register, handleSubmit, reset, setValue } = useForm();
@@ -11,17 +12,18 @@ export default function DataSource() {
         getSources();
     }, []);
 
-    const deleteSource = async (source) => {
-        await fetch("/api/postgres", {
-            method: "DELETE",
-            body: JSON.stringify({ "id": source.id }),
-            headers: { "Content-Type": "application/json" }
-        });
-        
-        getSources();
+    const getSources = async () => {
+        let res = await fetch("/api/datasource");
+        let sources = await res.json();
+        setSources(sources);
     };
 
     const createSource = async (source) => {
+        if (editMode) {
+            updateSource(source);
+            return;
+        }
+
         const request = {
             name: source.name,
             metadata: {
@@ -32,7 +34,7 @@ export default function DataSource() {
             }
         };
 
-        await fetch("/api/postgres", {
+        await fetch("/api/datasource", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(request)
@@ -42,18 +44,46 @@ export default function DataSource() {
         getSources();
     };
 
-    const editSource = (source) => {
+    const selectStore = (source) => {
+        setValue("id", source.id);
         setValue("name", source.name);
         setValue("host", source.metadata?.host);
         setValue("port", source.metadata?.port);
         setValue("user", source.metadata?.user);
         setValue("password", source.metadata?.password);
+        setEditMode(true);
     };
 
-    const getSources = async () => {
-        let res = await fetch("/api/postgres");
-        let sources = await res.json();
-        setSources(sources);
+    const updateSource = async (source) => {
+        const request = {
+            id: source.id,
+            name: source.name,
+            metadata: {
+                host: source.host,
+                port: source.port,
+                user: source.user,
+                password: source.password
+            }
+        };
+
+        await fetch("/api/datasource", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request)
+        });
+
+        reset();
+        getSources();
+    };
+
+    const deleteSource = async (source) => {
+        await fetch("/api/datasource", {
+            method: "DELETE",
+            body: JSON.stringify({ "id": source.id }),
+            headers: { "Content-Type": "application/json" }
+        });
+
+        getSources();
     };
 
     return (
@@ -89,7 +119,7 @@ export default function DataSource() {
                                                         {source.name}
                                                     </th>
                                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-md whitespace-nowrap text-right">
-                                                        <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none mx-5 hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button" onClick={() => editSource(source)}>
+                                                        <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none mx-5 hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button" onClick={() => selectStore(source)}>
                                                             <i className="fas fa-pencil-alt"></i>
                                                         </button>
 
@@ -143,7 +173,7 @@ export default function DataSource() {
                                         Save
                                     </button>
 
-                                    <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="button" onClick={() => reset()}>
+                                    <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="button" onClick={() => { setEditMode(false); reset(); }}>
                                         Reset
                                     </button>
                                 </form>

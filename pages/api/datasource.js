@@ -74,7 +74,7 @@ const updateSouce = async (request) => {
     }
 
     const client = await pool.connect();
-    return client.query('UPDATE datasource SET name = $2 AND metadata = $3 WHERE id = $1', [request.id, request.name, request.metadata])
+    return client.query('UPDATE datasource SET name = $1, metadata = $2 WHERE id = $3', [request.name, request.metadata, request.id])
         .then(res => {
             client.release();
             return res;
