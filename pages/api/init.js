@@ -45,7 +45,7 @@ export default async function handler(request, response) {
                 )`, []);
 
             // insert datasource
-            await client.query("INSERT INTO datasource (name, metadata) VALUES ($1, $2)", ["Postgres", credentials]);
+            await client.query("INSERT INTO datasource (id, name, metadata) VALUES ($1, $2, $3)", ["c0ef09a4-c978-4911-b80d-6c643150bb2b", "Postgres", credentials]);
 
             const panels = [
                 {
@@ -69,7 +69,7 @@ export default async function handler(request, response) {
             ];
 
             // insert dashboard
-            await client.query("INSERT INTO dashboard (name, datasourceId, panels) VALUES ($1, $2, $3)", ["Crystal", null, { panels: panels }]);
+            await client.query("INSERT INTO dashboard (name, datasourceId, panels) VALUES ($1, $2, $3)", ["Crystal", "c0ef09a4-c978-4911-b80d-6c643150bb2b", { panels: panels }]);
 
             // insert sample data
             await client.query("INSERT INTO node_packages (name, visitors, count) VALUES ($1, $2, $3)", ["Axios", 12564, 23]);
