@@ -6,13 +6,13 @@ export default function Panel({ type, editmode }) {
 
     const renderPanel = (type) => {
         switch (type) {
-            case "BarChart":
+            case "BAR_CHART":
                 return <BarChartPanel editmode={editmode}></BarChartPanel>;
 
-            case "Table":
+            case "DATA_TABLE":
                 return <TablePanel editmode={editmode}></TablePanel>;
 
-            case "AreaChart":
+            case "AREA_CHART":
                 return <AreaChartPanel editmode={editmode}></AreaChartPanel>
         }
     }

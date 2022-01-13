@@ -1,9 +1,11 @@
 import { createPopper } from "@popperjs/core";
 import Image from "next/image";
 import Link from "next/link";
-import { createRef, useState } from "react";
+import { useRouter } from "next/router";
+import { createRef, useEffect, useState } from "react";
 
 export default function Navbar() {
+  const [dashboards, setDashboards] = useState([]);
   const [dashboardsDropdownStatus, setDashboardsDropdownStatus] = useState(false);
   const [profileDropdownStatus, setProfileDropdownStatus] = useState(false);
   const [navStatus, setNavStatus] = useState(false);
@@ -12,6 +14,18 @@ export default function Navbar() {
   const dashboardsDropdownRef = createRef();
   const profileBtnRef = createRef();
   const profileDropdownRef = createRef();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    getDashboards();
+  }, []);
+
+  const getDashboards = async () => {
+    let res = await fetch("/api/dashboard");
+    let dashboards = await res.json();
+    setDashboards(dashboards);
+  };
 
   const openDropdownPopover = (type) => {
     switch (type) {
@@ -83,13 +97,15 @@ export default function Navbar() {
                 "bg-blueGray-700 text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-40 min-w-48"
               }
             >
-              <Link href="/dashboard/view/verizon">
-                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600">Verizon</a>
-              </Link>
-
-              <Link href="/dashboard/view/alcatel">
-                <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600">Alcatel</a>
-              </Link>
+              {
+                dashboards.map(dashboard => (
+                  <Link href={"/dashboard/view/" + dashboard.id} key={dashboard.id}>
+                    <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600">
+                      {dashboard.name}
+                    </a>
+                  </Link>
+                ))
+              }
 
               <div className="h-0 my-2 border border-solid border-t-0 border-blueGray-800 opacity-25" />
 

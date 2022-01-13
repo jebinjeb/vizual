@@ -14,29 +14,77 @@ const credentials = {
 const client = new Client(credentials);
 
 export default async function handler(request, response) {
-    await client.connect();
+    return new Promise(async (resolve, reject) => {
+        try {
+            await client.connect();
 
-    client.query(`
-        CREATE TABLE IF NOT EXISTS datasource (
-            id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
-            name TEXT NOT NULL, 
-            metadata JSONB
-        )`, []).then(() => {
+            // create datasource
+            await client.query(`
+            CREATE TABLE IF NOT EXISTS datasource (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
+                name TEXT NOT NULL, 
+                metadata JSONB
+            )`, []);
 
-        client.query("INSERT INTO datasource (name, metadata) VALUES ($1, $2)", ["Postgres", credentials])
-            .then(async () => {
-                await client.end();
-                response.status(200).json({ 'message': 'Vizual db initialized' });
-            }).catch(async (err) => {
-                await client.end();
-                console.log('failed to write data', err);
-                response.status(400).json({ 'message': 'failed to write data' });
-            });
+            // create dashboard
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS dashboard (
+                    id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
+                    name TEXT NOT NULL, 
+                    datasourceId UUID,
+                    panels JSONB
+                )`, []);
 
+            // create sample data for vizual
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS node_packages (
+                    id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
+                    name TEXT NOT NULL, 
+                    visitors INT,
+                    count INT
+                )`, []);
 
-    }).catch(async (err) => {
-        await client.end();
-        console.log('failed to create schema', err);
-        response.status(400).json({ 'message': 'failed to create schema' });
+            // insert datasource
+            await client.query("INSERT INTO datasource (name, metadata) VALUES ($1, $2)", ["Postgres", credentials]);
+
+            const panels = [
+                {
+                    id: 1,
+                    name: 'Node Packages',
+                    type: 'DATA_TABLE',
+                    query: 'SELECT * FROM node_packages'
+                },
+                {
+                    id: 2,
+                    name: 'Node Packages Bar Chart',
+                    type: 'BAR_CHART',
+                    query: 'SELECT * FROM node_packages'
+                },
+                {
+                    id: 3,
+                    name: 'Node Packages Area Chart',
+                    type: 'AREA_CHART',
+                    query: 'SELECT * FROM node_packages'
+                }
+            ];
+
+            // insert dashboard
+            await client.query("INSERT INTO dashboard (name, datasourceId, panels) VALUES ($1, $2, $3)", ["Crystal", null, { panels: panels }]);
+
+            // insert sample data
+            await client.query("INSERT INTO node_packages (name, visitors, count) VALUES ($1, $2, $3)", ["Axios", 12564, 23]);
+            await client.query("INSERT INTO node_packages (name, visitors, count) VALUES ($1, $2, $3)", ["Superagent", 571, 48]);
+            await client.query("INSERT INTO node_packages (name, visitors, count) VALUES ($1, $2, $3)", ["Fetch", 3107, 12]);
+            await client.query("INSERT INTO node_packages (name, visitors, count) VALUES ($1, $2, $3)", ["Request", 10480, 60]);
+
+            await client.end();
+            response.status(200).json({ 'message': 'Vizual db initialized' });
+            resolve();
+        } catch (err) {
+            await client.end();
+            console.log('failed to initialize schema', err);
+            response.status(400).json({ 'message': 'failed to initialize schema' });
+            reject();
+        }
     });
 }

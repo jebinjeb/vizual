@@ -1,12 +1,41 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Navbar from "../../../components/navbar";
 
 export default function Create() {
+    const [sources, setSources] = useState([]);
+    const [createStatus, setCreateStatus] = useState([false]);
     const { register, handleSubmit, reset } = useForm();
 
-    const createDashboard = (dashboard) => {
-        console.log(dashboard);
-        reset({ name: '', source: '' });
+    useEffect(() => {
+        getSources();
+    }, []);
+
+    const getSources = async () => {
+        let res = await fetch("/api/datasource");
+        let sources = await res.json();
+        setSources(sources);
+    };
+
+    const createDashboard = async (dashboard) => {
+        if (dashboard.source === 'DEFAULT') {
+            return;
+        }
+
+        const request = {
+            name: dashboard.name,
+            datasourceId: dashboard.source
+        };
+
+        await fetch("/api/dashboard", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request)
+        });
+
+        setCreateStatus(true);
+        reset({ name: '', source: 'DEFAULT' });
+        setTimeout(() => setCreateStatus(false), 3000);
     };
 
     return (
@@ -41,8 +70,21 @@ export default function Create() {
 
                                     <div className="relative w-full mb-10">
                                         <label className="block text-blueGray-400 text-sm mb-2">Data Source</label>
-                                        <input {...register("source", { required: true })} type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter data source" />
+                                        <select defaultValue={'DEFAULT'} {...register("source", { required: true })} className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150">
+                                            <option value="DEFAULT" disabled>Enter data source</option>
+                                            {
+                                                sources.map(source => (
+                                                    <option value={source.id} key={source.id}>{source.name}</option>
+                                                ))
+                                            }
+                                        </select>
                                     </div>
+
+                                    {
+                                        createStatus ?
+                                            <p className="text-amber-400 mb-4 font-bold uppercase text-sm mx-2">Dashboard created successfully</p>
+                                            : null
+                                    }
 
                                     <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="submit">
                                         Create

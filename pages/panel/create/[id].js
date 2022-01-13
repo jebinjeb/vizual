@@ -1,18 +1,28 @@
 import Link from "next/link";
 import { useState } from "react";
-import Navbar from "../../components/navbar";
-import Panel from "../../components/panel-container";
+import { useForm } from "react-hook-form";
+import Navbar from "../../../components/navbar";
+import Panel from "../../../components/panel-container";
 
 export default function CreatePanel() {
     const [progress, setProgress] = useState(0);
     const [isPanelVisible, setIsPanelVisible] = useState(false);
     const [isProgressVisible, setisProgressVisible] = useState(false);
+    const { register, handleSubmit, reset, setValue } = useForm();
 
-    const create = () => {
+    const panelTypes = [
+        { name: 'Area Chart', type: 'AREA_CHART' },
+        { name: 'Bar Chart', type: 'BAR_CHART' },
+        { name: 'Table', type: 'DATA_TABLE' }
+    ];
+
+    const create = (panel) => {
         progress = 0;
         setProgress(progress);
         setisProgressVisible(true);
         setIsPanelVisible(false);
+
+        console.log(panel);
 
         const i = setInterval(() => {
             progress = progress + 10;
@@ -50,29 +60,33 @@ export default function CreatePanel() {
                             </div>
 
                             <div className="px-10">
-                                <div className="relative w-full mb-6">
-                                    <label className="block text-blueGray-400 text-sm mb-2">Panel Title</label>
-                                    <input type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter panel name" />
-                                </div>
+                                <form onSubmit={handleSubmit(create)}>
+                                    <div className="relative w-full mb-6">
+                                        <label className="block text-blueGray-400 text-sm mb-2">Panel Title</label>
+                                        <input {...register("name", { required: true })} type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter panel name" />
+                                    </div>
 
-                                <div className="relative w-full mb-6">
-                                    <label className="block text-blueGray-400 text-sm mb-2">Panel Type</label>
-                                    <input type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter panel type" />
-                                </div>
+                                    <div className="relative w-full mb-6">
+                                        <label className="block text-blueGray-400 text-sm mb-2">Panel Type</label>
+                                        <select {...register("type", { required: true })} defaultValue={'DEFAULT'} className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150">
+                                            <option value="DEFAULT" disabled>Enter panel type</option>
+                                            {
+                                                panelTypes.map(panel => (
+                                                    <option value={panel.type} key={panel.type}>{panel.name}</option>
+                                                ))
+                                            }
+                                        </select>
+                                    </div>
 
-                                <div className="relative w-full mb-6">
-                                    <label className="block text-blueGray-400 text-sm mb-2">Data Source</label>
-                                    <input type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter panel type" />
-                                </div>
+                                    <div className="relative w-full mb-6">
+                                        <label className="block text-blueGray-400 text-sm mb-2">Data Query</label>
+                                        <textarea {...register("query", { required: true })} type="text" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" rows="4" placeholder="Enter panel description"></textarea>
+                                    </div>
 
-                                <div className="relative w-full mb-6">
-                                    <label className="block text-blueGray-400 text-sm mb-2">Data Query</label>
-                                    <textarea type="text" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" rows="4" placeholder="Enter panel description"></textarea>
-                                </div>
-
-                                <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="button" onClick={create}>
-                                    Execute & Visualize
-                                </button>
+                                    <button className="text-blueGray-500 bg-blueGray-300 active:bg-amber-600 font-bold uppercase text-sm px-6 py-2 mb-6 rounded-full shadow hover:text-white hover:shadow-lg hover:bg-amber-500 outline-none ease-linear transition-all duration-150" type="submit">
+                                        Execute & Visualize
+                                    </button>
+                                </form>
                             </div>
                         </div>
 

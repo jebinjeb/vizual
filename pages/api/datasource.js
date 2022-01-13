@@ -23,7 +23,7 @@ const getSources = async () => {
             client.release();
             return err;
         });
-}
+};
 
 const createSource = async (request) => {
     if (!request.name) {
