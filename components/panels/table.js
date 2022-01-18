@@ -1,6 +1,22 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
-export default function TablePanel({ editmode }) {
+export default function TablePanel({ editmode, source, query }) {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const getData = async () => {
+        const request = await fetch("/api/panel", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ source: source, query: query })
+        });
+        const json = await request.json();
+        setData(json);
+    }
+
     return (
         <Fragment>
             <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -35,42 +51,19 @@ export default function TablePanel({ editmode }) {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4 text-left">Fetch</th>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">10,480</td>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">
-                                <div className="flex items-center">
-                                    <span className="mr-2">60%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4 text-left">Axios</th>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">3,107</td>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">
-                                <div className="flex items-center">
-                                    <span className="mr-2">23%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4 text-left">Superagent</th>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">571</td>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">
-                                <div className="flex items-center">
-                                    <span className="mr-2">48%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4 text-left">Request</th>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">12,564</td>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">
-                                <div className="flex items-center">
-                                    <span className="mr-2">12%</span>
-                                </div>
-                            </td>
-                        </tr>
+                        {
+                            data.map((item) => (
+                                <tr key={item.id}>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4 text-left">{item.name}</td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">{item.visitors}</td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">
+                                        <div className="flex items-center">
+                                            <span className="mr-2">{item.count} %</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
             </div>

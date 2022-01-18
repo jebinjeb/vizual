@@ -21,7 +21,7 @@ export default function Dashboard() {
   const getDashboard = async () => {
     let res = await fetch("/api/dashboard/" + id);
     let dashboard = await res.json();
-    setDashboard({ id: dashboard.id, name: dashboard.name, datasourceId: dashboard.datasourceId, panels: dashboard.panels.panels });
+    setDashboard({ id: dashboard.id, name: dashboard.name, datasourceId: dashboard.datasourceid, panels: dashboard.panels.panels });
   };
 
   const onDeleteBtnClick = async () => {
@@ -82,7 +82,7 @@ export default function Dashboard() {
             {
               dashboard.panels.map(panel => (
                 <div className="w-full h-auto px-4 flex-1" key={panel.id}>
-                  <Panel type={panel.type} editmode={panelEditStatus}></Panel>
+                  <Panel type={panel.type} source={dashboard.datasourceId} query={panel.query} editmode={panelEditStatus}></Panel>
                 </div>
               ))
             }
