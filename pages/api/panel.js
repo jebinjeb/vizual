@@ -28,16 +28,15 @@ const getSource = async (id) => {
 export default async function handler(request, response) {
     const result = await getSource(request.body.source);
 
-    // TODO: based on type for db input and call connector
     const db = {
-        host: result[0].metadata.host,
-        database: result[0].metadata.database,
-        port: result[0].metadata.port,
-        username: result[0].metadata.user,
-        password: result[0].metadata.password,
+        host: result[0].metadata.host ? result[0].metadata.host : "",
+        database: result[0].metadata.database ? result[0].metadata.database : "",
+        port: result[0].metadata.port ? result[0].metadata.port : "",
+        username: result[0].metadata.user ? result[0].metadata.user : "",
+        password: result[0].metadata.password ? result[0].metadata.password : "",
     };
 
-    const req = await fetch("http://localhost:3000/api/connector/postgres", {
+    const req = await fetch("http://localhost:3000/api/connector/" + result[0].type.toLowerCase(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ db: db, query: request.body.query })

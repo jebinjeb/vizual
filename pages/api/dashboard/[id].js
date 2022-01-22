@@ -53,13 +53,13 @@ const updateDashboard = async (request) => {
         return response.status(400).json({ error: 'dashboard name is mandatory' });
     }
 
-    if (!request.datasourceId) {
+    if (!request.datasource_id) {
         return response.status(400).json({ error: 'datasource is mandatory' });
     }
 
     const client = await pool.connect();
-    return client.query('UPDATE database SET name = $1, panels = $2, datasourceId = $3 WHERE id = $4',
-        [request.name, request.panels, request.datasourceId, request.id])
+    return client.query('UPDATE database SET name = $1, panels = $2, datasource_id = $3 WHERE id = $4',
+        [request.name, request.panels, request.datasource_id, request.id])
         .then(res => {
             client.release();
             return res;

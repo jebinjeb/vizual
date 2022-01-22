@@ -22,8 +22,6 @@ export default function CreatePanel() {
         setisProgressVisible(true);
         setIsPanelVisible(false);
 
-        console.log(panel);
-
         const i = setInterval(() => {
             progress = progress + 10;
             setProgress(progress);

@@ -5,7 +5,7 @@ import Navbar from "../../../components/navbar";
 import Panel from "../../../components/panel-container";
 
 export default function Dashboard() {
-  const [dashboard, setDashboard] = useState({ id: "", name: "", datasourceId: "", panels: [] });
+  const [dashboard, setDashboard] = useState({ id: "", name: "", datasource_id: "", panels: [] });
   const [panelEditStatus, setPanelEditStatus] = useState(false);
 
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function Dashboard() {
   const getDashboard = async () => {
     let res = await fetch("/api/dashboard/" + id);
     let dashboard = await res.json();
-    setDashboard({ id: dashboard.id, name: dashboard.name, datasourceId: dashboard.datasourceid, panels: dashboard.panels.panels });
+    setDashboard({ id: dashboard.id, name: dashboard.name, datasource_id: dashboard.datasource_id, panels: dashboard.panels.panels });
   };
 
   const onDeleteBtnClick = async () => {
@@ -82,7 +82,7 @@ export default function Dashboard() {
             {
               dashboard.panels.map(panel => (
                 <div className="w-full h-auto px-4 flex-1" key={panel.id}>
-                  <Panel type={panel.type} source={dashboard.datasourceId} query={panel.query} editmode={panelEditStatus}></Panel>
+                  <Panel type={panel.type} source={dashboard.datasource_id} query={panel.query} editmode={panelEditStatus}></Panel>
                 </div>
               ))
             }

@@ -24,7 +24,7 @@ export default function Create() {
 
         const request = {
             name: dashboard.name,
-            datasourceId: dashboard.source
+            datasource_id: dashboard.source
         };
 
         await fetch("/api/dashboard", {

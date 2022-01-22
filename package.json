@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-free": "5.15.4",
     "@popperjs/core": "2.11.0",
     "@tailwindcss/forms": "0.4.0",
+    "clickhouse": "^2.4.2",
     "next": "12.0.7",
     "pg": "^8.7.1",
     "react": "17.0.2",

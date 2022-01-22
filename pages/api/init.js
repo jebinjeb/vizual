@@ -23,6 +23,7 @@ export default async function handler(request, response) {
             CREATE TABLE IF NOT EXISTS datasource (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
                 name TEXT NOT NULL, 
+                type TEXT NOT NULL,
                 metadata JSONB
             )`, []);
 
@@ -31,8 +32,8 @@ export default async function handler(request, response) {
                 CREATE TABLE IF NOT EXISTS dashboard (
                     id UUID PRIMARY KEY DEFAULT gen_random_uuid(), 
                     name TEXT NOT NULL, 
-                    datasourceId UUID,
-                    panels JSONB
+                    panels JSONB,
+                    datasource_id UUID REFERENCES datasource(id)
                 )`, []);
 
             // create sample data for vizual
@@ -45,7 +46,7 @@ export default async function handler(request, response) {
                 )`, []);
 
             // insert datasource
-            await client.query("INSERT INTO datasource (id, name, metadata) VALUES ($1, $2, $3)", ["c0ef09a4-c978-4911-b80d-6c643150bb2b", "Postgres", credentials]);
+            await client.query("INSERT INTO datasource (id, name, type, metadata) VALUES ($1, $2, $3, $4)", ["c0ef09a4-c978-4911-b80d-6c643150bb2b", "Postgres", "POSTGRES", credentials]);
 
             const panels = [
                 {
@@ -69,7 +70,7 @@ export default async function handler(request, response) {
             ];
 
             // insert dashboard
-            await client.query("INSERT INTO dashboard (name, datasourceId, panels) VALUES ($1, $2, $3)", ["Crystal", "c0ef09a4-c978-4911-b80d-6c643150bb2b", { panels: panels }]);
+            await client.query("INSERT INTO dashboard (name, datasource_id, panels) VALUES ($1, $2, $3)", ["Crystal", "c0ef09a4-c978-4911-b80d-6c643150bb2b", { panels: panels }]);
 
             // insert sample data
             await client.query("INSERT INTO node_packages (name, visitors, count) VALUES ($1, $2, $3)", ["Axios", 12564, 23]);

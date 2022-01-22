@@ -30,13 +30,13 @@ const createDashboard = async (request) => {
         return response.status(400).json({ error: 'dashboard name is mandatory' });
     }
 
-    if (!request.datasourceId) {
+    if (!request.datasource_id) {
         return response.status(400).json({ error: 'datasource is mandatory' });
     }
 
     const client = await pool.connect();
-    return client.query('INSERT INTO dashboard(name, datasourceId, panels) VALUES ($1, $2, $3)',
-        [request.name, request.datasourceId, { panels: [] }])
+    return client.query('INSERT INTO dashboard(name, datasource_id, panels) VALUES ($1, $2, $3)',
+        [request.name, request.datasource_id, { panels: [] }])
         .then(res => {
             client.release();
             return res;
