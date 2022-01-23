@@ -53,7 +53,7 @@ export default async function handler(request, response) {
                     id: 1,
                     name: 'Node Packages',
                     type: 'DATA_TABLE',
-                    query: 'SELECT * FROM node_packages'
+                    query: 'SELECT name, visitors, count FROM node_packages'
                 },
                 {
                     id: 2,

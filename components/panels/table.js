@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 
 export default function TablePanel({ editmode, source, query }) {
     const [data, setData] = useState([]);
+    const [headers, setHeaders] = useState([]);
 
     useEffect(() => {
         getData();
@@ -14,6 +15,7 @@ export default function TablePanel({ editmode, source, query }) {
             body: JSON.stringify({ source: source, query: query })
         });
         const json = await request.json();
+        setHeaders(Object.keys(json[0]));
         setData(json);
     }
 
@@ -45,22 +47,22 @@ export default function TablePanel({ editmode, source, query }) {
                 <table className="items-center w-full bg-transparent border-collapse">
                     <thead className="thead-light">
                         <tr>
-                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Referral</th>
-                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Visitors</th>
-                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Count</th>
+                            {
+                                headers.map(item => (
+                                    <th key={item} className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">{item.toUpperCase()}</th>
+                                ))
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         {
                             data.map((item) => (
                                 <tr key={item.id}>
-                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4 text-left">{item.name}</td>
-                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">{item.visitors}</td>
-                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4">
-                                        <div className="flex items-center">
-                                            <span className="mr-2">{item.count} %</span>
-                                        </div>
-                                    </td>
+                                    {
+                                        Object.keys(item).map((k) => (
+                                            <td key={k} className="border-t-0 px-6 align-middle border-l-0 border-r-0 font-semibold text-sm text-blueGray-500 whitespace-nowrap p-4 text-left">{item[k]}</td>
+                                        ))
+                                    }
                                 </tr>
                             ))
                         }
