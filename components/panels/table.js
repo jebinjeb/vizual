@@ -27,6 +27,20 @@ export default function TablePanel({ id, name, source, query, editmode }) {
         }
     };
 
+    const deletePanel = async () => {
+        const res = await fetch("/api/dashboard/" + dashboardID);
+        const dashboard = await res.json();
+
+        const index = dashboard.panels.panels.findIndex(p => p.id == id);
+        dashboard.panels.panels.splice(index, 1);
+    
+        await fetch("/api/dashboard/" + dashboardID, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dashboard)
+        });
+    };
+
     return (
         <Fragment>
             <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -44,7 +58,7 @@ export default function TablePanel({ id, name, source, query, editmode }) {
                                         </button>
                                     </Link>
 
-                                    <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button">
+                                    <button className="text-blueGray-500 bg-blueGray-300 text-sm shadow-lg font-normal h-8 w-8 items-center justify-center align-center rounded-md outline-none hover:text-white hover:bg-amber-500 active:bg-amber-600" type="button" onClick={deletePanel}>
                                         <i className="fas fa-times"></i>
                                     </button>
                                 </> : null
