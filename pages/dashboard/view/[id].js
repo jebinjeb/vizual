@@ -82,7 +82,14 @@ export default function Dashboard() {
             {
               dashboard.panels.map(panel => (
                 <div className="w-full h-auto px-4 flex-1" key={panel.id}>
-                  <Panel type={panel.type} source={dashboard.datasource_id} query={panel.query} editmode={panelEditStatus}></Panel>
+                  <Panel
+                    id={panel.id}
+                    name={panel.name}
+                    type={panel.type}
+                    source={dashboard.datasource_id}
+                    query={panel.query}
+                    editmode={panelEditStatus}>
+                  </Panel>
                 </div>
               ))
             }

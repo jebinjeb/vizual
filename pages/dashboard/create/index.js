@@ -4,7 +4,7 @@ import Navbar from "../../../components/navbar";
 
 export default function Create() {
     const [sources, setSources] = useState([]);
-    const [createStatus, setCreateStatus] = useState([false]);
+    const [createStatus, setCreateStatus] = useState(false);
     const { register, handleSubmit, reset } = useForm();
 
     useEffect(() => {

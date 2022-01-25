@@ -58,7 +58,7 @@ const updateDashboard = async (request) => {
     }
 
     const client = await pool.connect();
-    return client.query('UPDATE database SET name = $1, panels = $2, datasource_id = $3 WHERE id = $4',
+    return client.query('UPDATE dashboard SET name = $1, panels = $2, datasource_id = $3 WHERE id = $4',
         [request.name, request.panels, request.datasource_id, request.id])
         .then(res => {
             client.release();
@@ -81,7 +81,7 @@ export default async function handler(request, response) {
         case 'DELETE':
             result = await deleteDashboard(request.query);
             return response.status(200).json(result);
-        case 'POST':
+        case 'PUT':
             result = await updateDashboard(request.body);
             return response.status(200).json(result);
     }

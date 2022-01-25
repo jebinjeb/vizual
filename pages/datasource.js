@@ -37,7 +37,8 @@ export default function DataSource() {
                 host: source.host,
                 port: source.port,
                 user: source.user,
-                password: source.password
+                password: source.password,
+                database: source.database
             }
         };
 
@@ -59,6 +60,7 @@ export default function DataSource() {
         setValue("port", source.metadata?.port);
         setValue("user", source.metadata?.user);
         setValue("password", source.metadata?.password);
+        setValue("database", source.metadata?.database);
         setEditMode(true);
     };
 
@@ -71,7 +73,8 @@ export default function DataSource() {
                 host: source.host,
                 port: source.port,
                 user: source.user,
-                password: source.password
+                password: source.password,
+                database: source.database
             }
         };
 
@@ -177,6 +180,11 @@ export default function DataSource() {
                                     <div className="relative w-full mb-6">
                                         <label className="block text-blueGray-400 text-sm mb-2">Port</label>
                                         <input {...register("port")} type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter port" />
+                                    </div>
+
+                                    <div className="relative w-full mb-6">
+                                        <label className="block text-blueGray-400 text-sm mb-2">Database</label>
+                                        <input {...register("database")} type="text" className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150" placeholder="Enter database" />
                                     </div>
 
                                     <div className="relative w-full mb-6">

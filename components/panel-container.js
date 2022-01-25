@@ -2,17 +2,17 @@ import AreaChartPanel from "./panels/areachart";
 import BarChartPanel from "./panels/barchart";
 import TablePanel from "./panels/table";
 
-export default function Panel({ type, source, query, editmode }) {
+export default function Panel({ id, name, type, source, query, editmode }) {
     const renderPanel = (type) => {
         switch (type) {
             case "BAR_CHART":
-                return <BarChartPanel source={source} query={query} editmode={editmode}></BarChartPanel>;
+                return <BarChartPanel id={id} name={name} source={source} query={query} editmode={editmode}></BarChartPanel>;
 
             case "DATA_TABLE":
-                return <TablePanel source={source} query={query} editmode={editmode}></TablePanel>;
+                return <TablePanel id={id} name={name} source={source} query={query} editmode={editmode}></TablePanel>;
 
             case "AREA_CHART":
-                return <AreaChartPanel source={source} query={query} editmode={editmode}></AreaChartPanel>
+                return <AreaChartPanel id={id} name={name} source={source} query={query} editmode={editmode}></AreaChartPanel>
         }
     }
 

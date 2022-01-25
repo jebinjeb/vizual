@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Navbar from "../../../components/navbar";
 
@@ -6,22 +7,45 @@ export default function CreatePanel() {
     const { register, handleSubmit, reset, setValue } = useForm();
 
     const router = useRouter();
-    const id = router.query["id"];
+    const id = router.query["dashboard"];
+    const panelID = router.query["id"];
 
     const panelTypes = [
-        { name: "Area Chart", type: "AREA_CHART" },
-        { name: "Bar Chart", type: "BAR_CHART" },
-        { name: "Table", type: "DATA_TABLE" }
+        { name: 'Area Chart', type: 'AREA_CHART' },
+        { name: 'Bar Chart', type: 'BAR_CHART' },
+        { name: 'Table', type: 'DATA_TABLE' }
     ];
+
+    useEffect(() => {
+        if (!router.isReady)
+            return;
+
+        getDashboard();
+    }, [router.isReady]);
+
+    const getDashboard = async () => {
+        const res = await fetch("/api/dashboard/" + id);
+        const json = await res.json();
+
+        const panelInfo = json.panels.panels.filter(p => p.id == panelID);
+        if (panelInfo.length > 0) {
+            setValue("name", panelInfo[0].name);
+            setValue("type", panelInfo[0].type);
+            setValue("query", panelInfo[0].query);
+        }
+    };
 
     const create = async (info) => {
         const res = await fetch("/api/dashboard/" + id);
         const dashboard = await res.json();
-        dashboard.panels.panels.push({
-            id: dashboard.panels.panels.length,
-            name: info.name,
-            type: info.type,
-            query: info.query
+
+        dashboard.panels.panels.forEach((p) => {
+            if (panelID == p.id) {
+                p.id = panelID;
+                p.name = info.name;
+                p.type = info.type;
+                p.query = info.query;
+            }
         });
 
         await fetch("/api/dashboard/" + id, {
@@ -35,7 +59,7 @@ export default function CreatePanel() {
 
     return (
         <>
-            <div className="min-h-screen bg-blueGray-100">
+            <div className='min-h-screen bg-blueGray-100'>
                 <Navbar></Navbar>
 
                 <div className="mx-auto mb-5">
@@ -65,7 +89,7 @@ export default function CreatePanel() {
 
                                     <div className="relative w-full mb-6">
                                         <label className="block text-blueGray-400 text-sm mb-2">Panel Type</label>
-                                        <select {...register("type", { required: "select one option" })} defaultValue={"DEFAULT"} className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150">
+                                        <select {...register("type", { required: "select one option" })} defaultValue={'DEFAULT'} className="border-0 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full ease-linear transition-all duration-150">
                                             {
                                                 panelTypes.map(panel => (
                                                     <option value={panel.type} key={panel.type}>{panel.name}</option>

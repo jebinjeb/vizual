@@ -31,7 +31,7 @@ const createSource = async (request) => {
     }
 
     const client = await pool.connect();
-    return client.query('INSERT INTO datasource(name, metadata) VALUES ($1, $2)', [request.name, request.metadata])
+    return client.query('INSERT INTO datasource(name, type, metadata) VALUES ($1, $2, $3)', [request.name, request.type, request.metadata])
         .then(res => {
             client.release();
             return res;
@@ -71,7 +71,7 @@ const updateSouce = async (request) => {
     }
 
     const client = await pool.connect();
-    return client.query('UPDATE datasource SET name = $1, metadata = $2 WHERE id = $3', [request.name, request.metadata, request.id])
+    return client.query('UPDATE datasource SET name = $1, type=$2, metadata = $3 WHERE id = $4', [request.name, request.type, request.metadata, request.id])
         .then(res => {
             client.release();
             return res;
