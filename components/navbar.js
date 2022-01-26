@@ -60,6 +60,11 @@ export default function Navbar() {
     setNavStatus(!navStatus);
   };
 
+  const changeDashboard = (id) => {
+    closeDropdownPopover('dashboard');
+    router.push("/dashboard/view/" + id);
+  };
+
   return (
     <div className="mx-auto bg-white shadow-lg mb-5">
       <div className="flex flex-wrap h-16">
@@ -99,11 +104,9 @@ export default function Navbar() {
             >
               {
                 dashboards.map(dashboard => (
-                  <Link href={"/dashboard/view/" + dashboard.id} key={dashboard.id}>
-                    <a className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600">
-                      {dashboard.name}
-                    </a>
-                  </Link>
+                  <a onClick={() => changeDashboard(dashboard.id)} key={dashboard.id} className="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:font-semibold hover:text-amber-500 active:text-amber-600 cursor-pointer">
+                    {dashboard.name}
+                  </a>
                 ))
               }
 

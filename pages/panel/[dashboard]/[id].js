@@ -66,7 +66,7 @@ export default function CreatePanel() {
                     <div className="flex flex-wrap h-16">
                         <div className="w-full flex flex-1 justify-start items-center px-20">
                             <i className="fas fa-braille text-blueGray-500 text-3xl"></i>
-                            <p className="font-semibold text-blueGray-500 text-3xl px-6 py-3">Add Vizual</p>
+                            <p className="font-semibold text-blueGray-500 text-3xl px-6 py-3">Edit Vizual</p>
                         </div>
                     </div>
                 </div>

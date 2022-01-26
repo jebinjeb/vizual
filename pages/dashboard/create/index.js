@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Navbar from "../../../components/navbar";
@@ -6,6 +7,8 @@ export default function Create() {
     const [sources, setSources] = useState([]);
     const [createStatus, setCreateStatus] = useState(false);
     const { register, handleSubmit, reset } = useForm();
+
+    const router = useRouter();
 
     useEffect(() => {
         getSources();
@@ -35,7 +38,7 @@ export default function Create() {
 
         setCreateStatus(true);
         reset({ name: '', source: 'DEFAULT' });
-        setTimeout(() => setCreateStatus(false), 3000);
+        router.push("/");
     };
 
     return (

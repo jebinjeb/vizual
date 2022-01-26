@@ -1,28 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "../../../components/navbar";
 import Panel from "../../../components/panel-container";
 
-export default function Dashboard() {
-  const [dashboard, setDashboard] = useState({ id: "", name: "", datasource_id: "", panels: [] });
-  const [panelEditStatus, setPanelEditStatus] = useState(false);
-
+export default function Dashboard({ dashboard }) {
   const router = useRouter();
   const id = router.query["id"];
 
-  useEffect(() => {
-    if (!router.isReady)
-      return;
-
-    getDashboard();
-  }, [router.isReady]);
-
-  const getDashboard = async () => {
-    let res = await fetch("/api/dashboard/" + id);
-    let dashboard = await res.json();
-    setDashboard({ id: dashboard.id, name: dashboard.name, datasource_id: dashboard.datasource_id, panels: dashboard.panels.panels });
-  };
+  const [panelEditStatus, setPanelEditStatus] = useState(false);
 
   const onDeleteBtnClick = async () => {
     await fetch("/api/dashboard/" + id, {
@@ -51,13 +37,13 @@ export default function Dashboard() {
           </div>
 
           <div className="w-full flex flex-1 justify-end items-center px-16">
-            <Link href={"/panel/create/" + id} passHref>
+            <Link href={"/panel/create/" + dashboard.id} passHref>
               <button className="text-blueGray-500 bg-blueGray-300 hover:bg-amber-500 hover:text-white active:bg-amber-600 text-md rounded px-4 py-2 mx-2 mr-1 mb-1 ease-linear transition-all duration-150" type="button">
                 <i className="pr-2 fas fa-plus"></i> Add Visual
               </button>
             </Link>
 
-            <button className="text-blueGray-500 bg-blueGray-300 hover:bg-amber-500 hover:text-white active:bg-amber-600 text-md rounded p-2 mx-2 mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+            <button className="text-blueGray-500 bg-blueGray-300 hover:bg-amber-500 hover:text-white active:bg-amber-600 text-md rounded p-2 mx-2 mr-1 mb-1 ease-linear transition-all duration-150" type="button" onClick={() => location.reload()}>
               <i className="px-2 fas fa-sync-alt"></i>
             </button>
 
@@ -80,7 +66,7 @@ export default function Dashboard() {
         <div className="px-4 mx-auto">
           <div className="flex flex-wrap">
             {
-              dashboard.panels.map(panel => (
+              dashboard.panels.panels.map(panel => (
                 <div className="w-full h-auto px-4 flex-1" key={panel.id}>
                   <Panel
                     id={panel.id}
@@ -98,4 +84,18 @@ export default function Dashboard() {
       </div>
     </div>
   )
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch('http://localhost:3000/api/dashboard/' + params.id);
+  const json = await res.json();
+  return { props: { dashboard: json } };
+}
+
+export async function getStaticPaths() {
+  const res = await fetch('http://localhost:3000/api/dashboard/');
+  const json = await res.json();
+
+  const paths = json.map(p => ({ params: { id: p.id } }));
+  return { paths: paths, fallback: 'blocking' };
 }
