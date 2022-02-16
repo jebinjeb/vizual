@@ -93,9 +93,5 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const res = await fetch('http://localhost:3000/api/dashboard/');
-  const json = await res.json();
-
-  const paths = json.map(p => ({ params: { id: p.id } }));
-  return { paths: paths, fallback: 'blocking' };
+  return { paths: [], fallback: 'blocking' };
 }
