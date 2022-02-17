@@ -23,7 +23,6 @@ jobs:
         with:
           context: .
           tags: | 
-            vizual:latest
             ghcr.io/jency92/vizual:latest
           push: ${{ github.ref == 'refs/heads/main' }}
       - name: Image digest
