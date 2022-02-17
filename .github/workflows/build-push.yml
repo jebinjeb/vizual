@@ -1,13 +1,13 @@
 name: Build and Publish
-
 on:
-  # run it on push to the default repository branch
+# run it on push to the default repository branch
   push:
     branches: [main]
-defaults:
-  # define job to build and publish docker image
+jobs:
+# define job to build and publish docker image
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
+# run only when code is compiling and tests are passing
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -22,7 +22,8 @@ defaults:
         uses: docker/build-push-action@v2
         with:
           context: .
-          tags: |
+          tags: | 
+            vizual:latest
             ghcr.io/jency92/vizual:latest
           push: ${{ github.ref == 'refs/heads/main' }}
       - name: Image digest
